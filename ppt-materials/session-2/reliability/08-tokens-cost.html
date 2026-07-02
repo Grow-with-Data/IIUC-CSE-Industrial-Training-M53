@@ -1,0 +1,113 @@
+<!-- @dsCard group="Reliability & Cost" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens & cost</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --in:#4589ff; --out:#d97757; --gold:#febc2e; --oai:#10a37f;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(800px 500px at 88% -10%, rgba(254,188,46,.10), transparent 60%),
+      radial-gradient(700px 500px at 8% 110%, rgba(69,137,255,.10), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:56px;
+  }
+  .stage{width:1200px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .body{padding:46px 54px 50px;display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  h1{font-size:40px;letter-spacing:-1px;margin-top:10px;font-weight:800}
+  .lead{margin-top:14px;font-size:17px;color:var(--muted);line-height:1.55}
+  .meter{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--panel)}
+  .meter .cap{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.5px}
+  .barwrap{margin-top:14px}
+  .barrow{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .barrow .name{width:56px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .track{flex:1;height:16px;border-radius:8px;background:#0b0e14;border:1px solid var(--line);overflow:hidden}
+  .fill{height:100%;border-radius:8px}
+  .barrow .v{width:46px;text-align:right;font-family:var(--mono);font-size:13px}
+  .legend{display:flex;gap:18px;margin-top:16px;font-size:12.5px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .sw{width:11px;height:11px;border-radius:3px}
+  .side{display:flex;flex-direction:column;gap:16px}
+  .usage{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:rgba(255,255,255,.03);color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.5px}
+  td:first-child{color:var(--muted)}
+  td.mono{font-family:var(--mono)}
+  tr:last-child td{border-bottom:none}
+  .cost{border:1px solid rgba(254,188,46,.35);border-radius:14px;padding:20px 22px;
+    background:linear-gradient(180deg,rgba(254,188,46,.08),transparent)}
+  .cost .lbl{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+  .cost .big{font-size:38px;font-weight:800;margin-top:6px;letter-spacing:-1px}
+  .cost .eq{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:8px}
+  .foot{grid-column:1/-1;margin-top:8px;display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:14px;
+    border:1px dashed var(--line);background:rgba(255,255,255,.02);font-size:15.5px;color:var(--muted)}
+  .foot b{color:var(--txt)}.emoji{font-size:22px}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="file">tokens_and_cost.py</span>
+      </div>
+      <div class="body">
+        <div>
+          <div class="eyebrow">The unit you pay for</div>
+          <h1>Tokens &amp; cost</h1>
+          <p class="lead">A token is ~¾ of a word. Every response reports how many it used — input vs output. <b>Output usually costs more.</b></p>
+
+          <div class="meter">
+            <div class="cap">SAME MESSAGE · TOKENS PER PROVIDER</div>
+            <div class="barwrap">
+              <div class="barrow"><span class="name">OpenAI</span><div class="track"><div class="fill" style="width:18%;background:var(--in)"></div></div><span class="v" style="color:var(--in)">24</span></div>
+              <div class="barrow"><span class="name"></span><div class="track"><div class="fill" style="width:82%;background:var(--out)"></div></div><span class="v" style="color:var(--out)">107</span></div>
+              <div class="barrow"><span class="name">Gemini</span><div class="track"><div class="fill" style="width:16%;background:var(--in)"></div></div><span class="v" style="color:var(--in)">21</span></div>
+              <div class="barrow"><span class="name"></span><div class="track"><div class="fill" style="width:100%;background:var(--out)"></div></div><span class="v" style="color:var(--out)">523</span></div>
+            </div>
+            <div class="legend"><span><span class="sw" style="background:var(--in)"></span>input tokens</span><span><span class="sw" style="background:var(--out)"></span>output tokens</span></div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="usage">
+            <table>
+              <tr><th>provider</th><th>in</th><th>out</th><th>total</th></tr>
+              <tr><td>OpenAI</td><td class="mono">24</td><td class="mono">107</td><td class="mono">131</td></tr>
+              <tr><td>Anthropic</td><td class="mono">27</td><td class="mono">200</td><td class="mono">—</td></tr>
+              <tr><td>Gemini</td><td class="mono">21</td><td class="mono">523</td><td class="mono">544</td></tr>
+            </table>
+          </div>
+          <div class="cost">
+            <div class="lbl">cost = tokens × price / 1M</div>
+            <div class="big">$0.01475</div>
+            <div class="eq">input × in-price&nbsp;&nbsp;+&nbsp;&nbsp;output × out-price</div>
+          </div>
+        </div>
+
+        <div class="foot"><span class="emoji">🚕</span><div><b>Real-life:</b> a taxi meter — the longer the prompt <i>and</i> the reply, the more it ticks. "Be concise" saves money as well as time.</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

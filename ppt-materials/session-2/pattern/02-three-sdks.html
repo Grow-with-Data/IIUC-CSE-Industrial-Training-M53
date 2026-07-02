@@ -1,0 +1,130 @@
+<!-- @dsCard group="The Pattern" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three SDKs, one idea</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --oai:#10a37f; --gem:#4589ff; --gem2:#9b72cb; --ant:#d97757;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(700px 420px at 12% -8%, rgba(16,163,127,.14), transparent 60%),
+      radial-gradient(700px 420px at 50% -8%, rgba(69,137,255,.12), transparent 60%),
+      radial-gradient(700px 420px at 88% -8%, rgba(217,119,87,.14), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:52px;
+  }
+  .stage{width:1240px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .body{padding:46px 50px 50px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:40px;letter-spacing:-1px;margin-top:10px;font-weight:800}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--oai),var(--gem) 55%,var(--ant));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+  .head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .logo{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#05100c}
+  .head .nm{font-weight:750;font-size:17px}
+  .head .tag{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .glow{height:3px}
+  .cbody{padding:18px}
+  pre{font-family:var(--mono);font-size:13px;line-height:1.75;color:#cdd9e5;white-space:pre-wrap;word-break:break-word}
+  .k{color:#ff7b72}.fn{color:#79c0ff}.s{color:#a5d6a4}.c{color:var(--dim)}.p{color:#d2a8ff}
+  .read{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .read b{color:var(--txt)}
+  .recap{margin-top:26px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:rgba(255,255,255,.03);color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;letter-spacing:.5px}
+  td:first-child{color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .mono{font-family:var(--mono);font-size:12.5px}
+  .req{color:var(--ant);font-weight:700}.opt{color:var(--dim)}
+  .foot{margin-top:22px;font-size:15px;color:var(--muted);line-height:1.5}
+  .foot b{color:var(--txt)}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="file">same_task_three_ways.py</span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">One request · three providers</div>
+        <h1>Three SDKs, <em>one idea</em></h1>
+
+        <div class="grid">
+          <!-- OpenAI -->
+          <div class="card">
+            <div class="glow" style="background:var(--oai)"></div>
+            <div class="head"><span class="logo" style="background:var(--oai)">O</span><span class="nm">OpenAI</span><span class="tag">gpt-5.4-mini</span></div>
+            <div class="cbody">
+<pre>resp = oai.responses.<span class="fn">create</span>(
+    model=MODEL,
+    input=<span class="s">"Say hello."</span>,
+)</pre>
+              <div class="read">read → <b>resp.output_text</b></div>
+            </div>
+          </div>
+          <!-- Gemini -->
+          <div class="card">
+            <div class="glow" style="background:linear-gradient(90deg,var(--gem),var(--gem2))"></div>
+            <div class="head"><span class="logo" style="background:linear-gradient(135deg,var(--gem),var(--gem2))">G</span><span class="nm">Gemini</span><span class="tag">gemini-3.1-flash</span></div>
+            <div class="cbody">
+<pre>resp = gem.models.<span class="fn">generate_content</span>(
+    model=MODEL,
+    contents=<span class="s">"Say hello."</span>,
+)</pre>
+              <div class="read">read → <b>resp.text</b></div>
+            </div>
+          </div>
+          <!-- Anthropic -->
+          <div class="card">
+            <div class="glow" style="background:var(--ant)"></div>
+            <div class="head"><span class="logo" style="background:var(--ant)">A</span><span class="nm">Anthropic</span><span class="tag">claude-haiku-4-5</span></div>
+            <div class="cbody">
+<pre>resp = ant.messages.<span class="fn">create</span>(
+    model=MODEL,
+    <span class="p">max_tokens</span>=1024,
+    messages=[{<span class="s">"role"</span>:<span class="s">"user"</span>,
+               <span class="s">"content"</span>:<span class="s">"Say hello."</span>}],
+)</pre>
+              <div class="read">read → <b>resp.content[0].text</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recap">
+          <table>
+            <tr><th></th><th>OpenAI</th><th>Gemini</th><th>Anthropic</th></tr>
+            <tr><td>call</td><td class="mono">responses.create(input=…)</td><td class="mono">generate_content(contents=…)</td><td class="mono">messages.create(messages=[…])</td></tr>
+            <tr><td>read text</td><td class="mono">.output_text</td><td class="mono">.text</td><td class="mono">.content[0].text</td></tr>
+            <tr><td>max_tokens</td><td class="opt">optional</td><td class="opt">optional</td><td class="req">required</td></tr>
+          </table>
+        </div>
+
+        <p class="foot">Same task, three ways. Hold that thought — it's the reason frameworks like <b>LangChain</b> (next session) exist.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

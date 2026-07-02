@@ -1,0 +1,92 @@
+<!-- @dsCard group="Structured Output" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structured output — prose to form</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --oai:#10a37f; --gem:#4589ff; --ant:#d97757; --gold:#febc2e;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(800px 500px at 12% -10%, rgba(217,119,87,.12), transparent 60%),
+      radial-gradient(800px 500px at 90% 110%, rgba(16,163,127,.12), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:56px;
+  }
+  .stage{width:1200px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .body{padding:46px 54px 50px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ant)}
+  h1{font-size:38px;letter-spacing:-1px;margin-top:10px;font-weight:800}
+  .lead{margin-top:12px;font-size:17px;color:var(--muted);max-width:820px;line-height:1.5}
+  .split{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;margin-top:34px;gap:8px}
+  .panelc{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+  .ph{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;font-weight:700}
+  .ph .tagm{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .prose{padding:22px;font-size:15px;line-height:1.7;color:#d9c3b8;font-style:italic}
+  .form{padding:20px 22px 22px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;flex-direction:column;gap:6px}
+  .flabel{font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--dim)}
+  .fval{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);border-radius:10px;
+    background:#0b0e14;font-family:var(--mono);font-size:14px}
+  .chipv{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
+  .arrow{display:grid;place-items:center;color:var(--dim)}
+  .arrow svg{width:40px;height:40px}
+  .foot{margin-top:30px;display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:14px;
+    border:1px dashed var(--line);background:rgba(255,255,255,.02);font-size:16px;color:var(--muted)}
+  .foot b{color:var(--txt)}.emoji{font-size:22px}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="file">structured_output.py</span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">Typed, validated data — not prose</div>
+        <h1>Hand the model a form</h1>
+        <p class="lead">So far the model handed us prose — great for a human, awkward for code. Structured output flips it: give it a Pydantic model and it fills in the boxes.</p>
+
+        <div class="split">
+          <div class="panelc">
+            <div class="ph">📝 What the customer wrote<span class="tagm">for reading</span></div>
+            <div class="prose">“I've been charged twice for May and nobody has replied to my emails. This is ridiculous.”</div>
+          </div>
+
+          <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+          <div class="panelc">
+            <div class="ph">🎫 Support ticket<span class="tagm">Triage · for routing</span></div>
+            <div class="form">
+              <div class="row"><span class="flabel">category</span><div class="fval"><span class="chipv" style="background:rgba(69,137,255,.18);color:var(--gem)">billing</span></div></div>
+              <div class="row"><span class="flabel">urgency</span><div class="fval"><span class="chipv" style="background:rgba(217,119,87,.2);color:var(--ant)">high</span></div></div>
+              <div class="row"><span class="flabel">sentiment</span><div class="fval"><span class="chipv" style="background:rgba(255,95,87,.16);color:#ff8a80">negative</span></div></div>
+              <div class="row"><span class="flabel">summary</span><div class="fval" style="font-size:12.5px;color:var(--muted)">Double-charged for May, no email reply</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="foot"><span class="emoji">💡</span><div><b>Real-life:</b> the difference between a customer <b>writing you a paragraph</b> and you transferring it onto a <b>support-ticket form</b>. The paragraph is for reading; the form is for routing, counting, and automating.</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

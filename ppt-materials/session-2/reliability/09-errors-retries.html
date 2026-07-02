@@ -1,0 +1,104 @@
+<!-- @dsCard group="Reliability & Cost" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Errors & retries</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --warn:#febc2e; --err:#ff5f57; --net:#4589ff; --ok:#10a37f;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(800px 500px at 10% -10%, rgba(255,95,87,.10), transparent 60%),
+      radial-gradient(700px 500px at 92% 110%, rgba(16,163,127,.10), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:56px;
+  }
+  .stage{width:1200px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .body{padding:46px 54px 50px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--err)}
+  h1{font-size:40px;letter-spacing:-1px;margin-top:10px;font-weight:800}
+  .lead{margin-top:12px;font-size:17px;color:var(--muted);max-width:840px;line-height:1.5}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:32px;align-items:start}
+  .code{background:#0b0e14;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .code .ch{padding:11px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--dim)}
+  pre{font-family:var(--mono);font-size:13px;line-height:1.75;padding:16px;color:#cdd9e5;white-space:pre-wrap}
+  .k{color:#ff7b72}.fn{color:#79c0ff}.s{color:#a5d6a4}.c{color:var(--dim)}.ex{color:#ffa657}
+  .cards{display:flex;flex-direction:column;gap:14px}
+  .ecard{display:flex;gap:15px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line);
+    border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);position:relative;overflow:hidden}
+  .ecard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac)}
+  .badge{font-family:var(--mono);font-weight:800;font-size:14px;padding:8px 12px;border-radius:9px;white-space:nowrap;color:#0a0c10}
+  .ecard h3{font-size:16px;font-weight:700}
+  .ecard p{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+  .ecard .who{margin-top:7px;font-family:var(--mono);font-size:11.5px;color:var(--ac)}
+  .foot{margin-top:28px;display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:14px;
+    border:1px dashed var(--line);background:rgba(255,255,255,.02);font-size:15.5px;color:var(--muted)}
+  .foot b{color:var(--txt)}.emoji{font-size:22px}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="file">errors_and_retries.py</span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">Real calls fail sometimes</div>
+        <h1>Errors &amp; retries</h1>
+        <p class="lead">The SDKs already retry transient errors (429 / 5xx) with backoff. Your job is to catch what's left and decide.</p>
+
+        <div class="split">
+          <div class="code">
+            <div class="ch">the safety net you write</div>
+<pre>oai = <span class="fn">OpenAI</span>(<span class="ex">max_retries</span>=3, <span class="ex">timeout</span>=30)
+
+<span class="k">try</span>:
+    resp = oai.responses.<span class="fn">create</span>(…)
+<span class="k">except</span> openai.<span class="ex">RateLimitError</span>:
+    <span class="c"># slow down / retry later</span>
+<span class="k">except</span> openai.<span class="ex">APIStatusError</span> <span class="k">as</span> e:
+    <span class="c"># e.status_code (5xx …)</span>
+<span class="k">except</span> openai.<span class="ex">APIConnectionError</span>:
+    <span class="c"># your network dropped</span></pre>
+          </div>
+
+          <div class="cards">
+            <div class="ecard" style="--ac:var(--warn)">
+              <span class="badge" style="background:var(--warn)">429</span>
+              <div><h3>Rate limit</h3><p>“All our agents are busy, please hold.” Wait and redial — the SDK does this for you.</p><div class="who">→ auto-retried with backoff</div></div>
+            </div>
+            <div class="ecard" style="--ac:var(--err)">
+              <span class="badge" style="background:var(--err)">5xx</span>
+              <div><h3>Server error</h3><p>The provider's switchboard glitched. Transient — also auto-retried.</p><div class="who">→ auto-retried with backoff</div></div>
+            </div>
+            <div class="ecard" style="--ac:var(--net)">
+              <span class="badge" style="background:var(--net)">⚡</span>
+              <div><h3>Connection error</h3><p>Your own Wi-Fi dropped. Catch it and decide what to do.</p><div class="who">→ you handle it</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="foot"><span class="emoji">📞</span><div><b>Same idea on all three:</b> Anthropic &amp; Gemini raise the same categories — <code>RateLimitError</code>, <code>APIStatusError</code>, <code>APIConnectionError</code> (Gemini groups them under <code>errors.APIError</code>).</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

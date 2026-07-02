@@ -1,0 +1,85 @@
+<!-- @dsCard group="Prompts" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy of a system prompt</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --sys:#d2a8ff; --oai:#10a37f; --gem:#4589ff; --ant:#d97757; --gold:#febc2e;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(900px 500px at 50% -12%, rgba(210,168,255,.12), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:52px;
+  }
+  .stage{width:1240px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .body{padding:44px 52px 48px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--sys)}
+  h1{font-size:38px;letter-spacing:-1px;margin-top:10px;font-weight:800}
+  .lead{margin-top:12px;font-size:17px;color:var(--muted);max-width:840px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+  .blk{border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;background:
+    linear-gradient(180deg,rgba(255,255,255,.028),transparent);position:relative;overflow:hidden}
+  .blk::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--ac)}
+  .blk .n{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .blk h3{font-size:16px;margin-top:6px;font-weight:750}
+  .blk p{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .blk .ex{font-family:var(--mono);font-size:11.5px;color:#cdd9e5;margin-top:10px;padding:9px 10px;
+    background:#0b0e14;border:1px solid var(--line);border-radius:8px;line-height:1.4}
+  .tips{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .tip{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--muted);line-height:1.45;
+    padding:14px 16px;border:1px dashed var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
+  .tip b{color:var(--txt)}
+  .tip .i{color:var(--gold);font-size:16px;line-height:1}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="file">anatomy_of_a_system_prompt.md</span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">The employee handbook you write once</div>
+        <h1>Anatomy of a system prompt</h1>
+        <p class="lead">Most production prompts are assembled from the same parts. You rarely need all eight — but decide on each one consciously.</p>
+
+        <div class="grid">
+          <div class="blk" style="--ac:var(--sys)"><div class="n">01</div><h3>Role / persona</h3><p>Who it is.</p><div class="ex">“You are a support agent for Northstar.”</div></div>
+          <div class="blk" style="--ac:var(--gem)"><div class="n">02</div><h3>Task / goal</h3><p>What to do.</p><div class="ex">“Triage the message &amp; draft a reply.”</div></div>
+          <div class="blk" style="--ac:var(--oai)"><div class="n">03</div><h3>Tone / audience</h3><p>How it sounds.</p><div class="ex">“Friendly, calm, and concise.”</div></div>
+          <div class="blk" style="--ac:var(--ant)"><div class="n">04</div><h3>Rules / guardrails</h3><p>The do's &amp; don'ts.</p><div class="ex">“Never invent account details.”</div></div>
+          <div class="blk" style="--ac:var(--gem)"><div class="n">05</div><h3>Output format</h3><p>Shape of the answer.</p><div class="ex">“Reply in 2–3 sentences.”</div></div>
+          <div class="blk" style="--ac:var(--oai)"><div class="n">06</div><h3>Context / knowledge</h3><p>Facts to use.</p><div class="ex">Hours, product names, policies.</div></div>
+          <div class="blk" style="--ac:var(--ant)"><div class="n">07</div><h3>Fallback</h3><p>What to do when unsure.</p><div class="ex">“If unsure, offer to escalate.”</div></div>
+          <div class="blk" style="--ac:var(--sys)"><div class="n">08</div><h3>Examples <span style="color:var(--dim);font-weight:400">(opt.)</span></h3><p>One or two model answers.</p><div class="ex">“Few-shot” for tricky formats.</div></div>
+        </div>
+
+        <div class="tips">
+          <div class="tip"><span class="i">◆</span><div><b>Edges matter.</b> Put the most important rules <b>first and last</b> — models weight the edges most.</div></div>
+          <div class="tip"><span class="i">◆</span><div><b>Be specific &amp; positive.</b> “Reply in 2–3 sentences” beats “be brief.”</div></div>
+          <div class="tip"><span class="i">◆</span><div><b>Keep it stable.</b> Anything that changes per request belongs in the <b>user</b> message.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
