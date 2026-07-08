@@ -1,0 +1,112 @@
+<!-- @dsCard group="The Interface" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One interface, any model</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --ls:#d2a8ff; --lc:#1faa8b; --gem:#4589ff; --ant:#d97757;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(820px 480px at 0% -10%, rgba(210,168,255,.13), transparent 60%),
+      radial-gradient(820px 480px at 100% 110%, rgba(31,170,139,.1), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1240px;max-width:100%}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ls)}
+  h1{font-size:38px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+
+  .cols{margin-top:24px;display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start}
+
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:8px}.d{width:11px;height:11px;border-radius:50%}
+  .rd{background:#ff5f57}.yl{background:#febc2e}.gr{background:#28c840}
+  .file{font-family:var(--mono);font-size:12.5px;color:var(--dim)}
+  .code{padding:20px 20px;font-family:var(--mono);font-size:14.5px;line-height:1.95;color:#cdd6e0}
+  .code .k{color:#c586e0}.code .s{color:#7fd88f}.code .c{color:var(--dim)}.code .f{color:#82b7ff}
+  .code .hl{background:rgba(210,168,255,.14);border-radius:5px;padding:1px 5px;color:#e2ccff;font-weight:700}
+
+  .side{display:flex;flex-direction:column;gap:18px}
+  .anat{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel)}
+  .anat .t{font-size:13px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .str{display:flex;align-items:stretch;font-family:var(--mono);font-size:19px;border-radius:11px;overflow:hidden;border:1px solid var(--line)}
+  .str .p{padding:14px 16px;background:rgba(31,170,139,.14);color:#5fd6bb;font-weight:700}
+  .str .sepc{display:grid;place-items:center;padding:0 10px;background:rgba(255,255,255,.03);color:var(--dim)}
+  .str .m{padding:14px 16px;background:rgba(210,168,255,.14);color:#e2ccff;font-weight:700;flex:1}
+  .legend{display:flex;gap:22px;margin-top:12px}
+  .legend div{font-size:12.5px;color:var(--muted)}
+  .legend b{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+  .legend .lp b{color:var(--lc)} .legend .lm b{color:var(--ls)}
+
+  .adapter{border:1px solid rgba(210,168,255,.28);border-radius:14px;padding:16px 18px;background:rgba(210,168,255,.06);
+    font-size:15px;color:#d3dae2;line-height:1.55}
+  .adapter b{color:var(--txt)} .adapter .em{color:var(--ls);font-weight:700}
+
+  .out{border:1px solid var(--line);border-radius:14px;padding:14px 18px;background:var(--panel)}
+  .out .t{font-size:12px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .out .row{display:flex;gap:10px;align-items:baseline;font-size:14px;color:#d3dae2;padding:3px 0}
+  .out .row code{font-family:var(--mono);color:#82b7ff;background:rgba(69,137,255,.1);padding:1px 6px;border-radius:5px}
+  .out .row span{color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">The standard interface</div>
+    <h1>One interface, any model</h1>
+
+    <div class="cols">
+      <div class="win">
+        <div class="bar">
+          <div class="dots"><span class="d rd"></span><span class="d yl"></span><span class="d gr"></span></div>
+          <span class="file">main.py</span>
+        </div>
+        <div class="code">
+<span class="k">from</span> langchain.chat_models <span class="k">import</span> init_chat_model<br><br>
+<span class="c"># the provider lives INSIDE the string</span><br>
+MODEL = <span class="hl">"google_genai:gemini-3.1-flash-lite"</span><br>
+model = <span class="f">init_chat_model</span>(MODEL)<br><br>
+resp = model.<span class="f">invoke</span>(<span class="s">"Say hello in one sentence."</span>)<br>
+<span class="f">print</span>(resp.<span class="hl">text</span>)
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="anat">
+          <div class="t">the model string</div>
+          <div class="str">
+            <span class="p">google_genai</span>
+            <span class="sepc">:</span>
+            <span class="m">gemini-3.1-flash-lite</span>
+          </div>
+          <div class="legend">
+            <div class="lp"><b>provider</b>who makes it</div>
+            <div class="lm"><b>model</b>which one</div>
+          </div>
+        </div>
+
+        <div class="adapter">💡 <b>Like a universal travel adapter:</b> every country has a different socket, but you carry <span class="em">one adapter</span> and your laptop just plugs in. Change the <span class="em">plug</span> (the string), not your charger.</div>
+
+        <div class="out">
+          <div class="t">what invoke() gives back — same for every provider</div>
+          <div class="row"><code>.text</code><span>→ the reply</span></div>
+          <div class="row"><code>.usage_metadata</code><span>→ token counts (uniform keys!)</span></div>
+          <div class="row"><code>.content</code><span>→ the raw message content</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

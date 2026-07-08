@@ -1,0 +1,88 @@
+<!-- @dsCard group="Recap" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 2 → 3, and what's next</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --lc:#1faa8b; --gem:#4589ff; --warn:#febc2e; --ant:#d97757;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(860px 500px at 12% -10%, rgba(31,170,139,.14), transparent 60%),
+      radial-gradient(860px 500px at 88% 115%, rgba(217,119,87,.12), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1240px;max-width:100%}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--lc)}
+  h1{font-size:38px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+
+  .cols{margin-top:22px;display:grid;grid-template-columns:1.35fr .9fr;gap:22px;align-items:start}
+
+  .table{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .trow{display:grid;grid-template-columns:1fr 1.1fr 1.1fr;align-items:center}
+  .trow>div{padding:12px 16px;font-size:13.5px;border-bottom:1px solid rgba(35,42,53,.7)}
+  .trow:last-child>div{border-bottom:0}
+  .thead>div{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);background:rgba(255,255,255,.02)}
+  .task{color:var(--muted)}
+  .s2{color:#c9b08a;font-family:var(--mono);font-size:12.5px;border-left:1px solid rgba(35,42,53,.7)}
+  .s3{color:#8fe6cd;font-family:var(--mono);font-size:12.5px;font-weight:700;border-left:1px solid rgba(35,42,53,.7);background:rgba(31,170,139,.05)}
+  .trow.hot .s3{color:#5fd6bb}
+  .trow.hot .task{color:var(--txt);font-weight:700}
+
+  .side{display:flex;flex-direction:column;gap:16px}
+  .win{border:1px solid rgba(31,170,139,.3);border-radius:15px;padding:18px 20px;background:rgba(31,170,139,.07)}
+  .win .h{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--lc);margin-bottom:9px}
+  .win .t{font-size:16.5px;color:var(--txt);line-height:1.5}
+  .win .t b{color:var(--lc)}
+
+  .next{border:1px solid rgba(217,119,87,.32);border-radius:15px;padding:18px 20px;background:rgba(217,119,87,.07)}
+  .next .lbl{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:1px;
+    text-transform:uppercase;color:var(--ant);border:1px solid rgba(217,119,87,.4);border-radius:6px;padding:5px 10px}
+  .next .big{font-size:19px;font-weight:800;margin-top:12px;letter-spacing:-.3px}
+  .next .d{margin-top:8px;font-size:14.5px;color:#d3dae2;line-height:1.5}
+  .next .d b{color:#f0a67e}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Recap</div>
+    <h1>Session 2 → Session 3</h1>
+
+    <div class="cols">
+      <div class="table">
+        <div class="trow thead"><div>the task</div><div class="s2">Session 2 · raw SDKs</div><div class="s3">Session 3 · LangChain</div></div>
+        <div class="trow hot"><div class="task">swap provider</div><div class="s2">rewrite the call</div><div class="s3">change one string</div></div>
+        <div class="trow"><div class="task">pick a model</div><div class="s2">3 different clients</div><div class="s3">init_chat_model(…)</div></div>
+        <div class="trow"><div class="task">system prompt</div><div class="s2">system= / instructions= / config=</div><div class="s3">SystemMessage(…)</div></div>
+        <div class="trow"><div class="task">structured output</div><div class="s2">3 different .parse APIs</div><div class="s3">with_structured_output()</div></div>
+        <div class="trow"><div class="task">token usage</div><div class="s2">3 field names</div><div class="s3">usage_metadata (uniform)</div></div>
+        <div class="trow"><div class="task">tools / agent</div><div class="s2">hand-rolled</div><div class="s3">create_agent(…)</div></div>
+        <div class="trow"><div class="task">memory</div><div class="s2">resend history yourself</div><div class="s3">checkpointer + thread_id</div></div>
+      </div>
+
+      <div class="side">
+        <div class="win">
+          <div class="h">✓ delivered</div>
+          <div class="t">The CTO got exactly the ask: <b>same features, vendor-agnostic, tidier code</b> — and we met the building blocks the whole course leans on.</div>
+        </div>
+        <div class="next">
+          <span class="lbl">▶ next · Session 4</span>
+          <div class="big">Real tools on real data</div>
+          <div class="d">Our assistant still <b>guesses</b> about accounts. Next we give it tools to look up <b>real</b> customer &amp; invoice data, add <b>guardrails</b>, and switch on <b>LangSmith</b> to watch it work.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

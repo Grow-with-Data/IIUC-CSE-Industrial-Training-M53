@@ -1,0 +1,144 @@
+<!-- @dsCard group="The Interface" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swap the vendor in one line</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --ls:#d2a8ff; --lc:#1faa8b; --gem:#4589ff; --ant:#d97757; --oai:#10a37f; --warn:#febc2e;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(820px 480px at 0% -10%, rgba(210,168,255,.13), transparent 60%),
+      radial-gradient(820px 480px at 100% 110%, rgba(69,137,255,.1), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1200px;max-width:100%}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);
+    border-radius:18px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .dots{display:flex;gap:9px}.dot{width:13px;height:13px;border-radius:50%}
+  .rd{background:#ff5f57}.yl{background:#febc2e}.gr{background:#28c840}
+  .file{font-family:var(--mono);font-size:13px;color:var(--dim)}
+  .prog{margin-left:auto;display:flex;gap:7px}
+  .pdot{width:9px;height:9px;border-radius:50%;background:#2a3340;transition:.4s}
+  body:is([data-step="1"],[data-step="2"],[data-step="3"]) .pdot:nth-child(1),
+  body:is([data-step="2"],[data-step="3"]) .pdot:nth-child(2),
+  body[data-step="3"] .pdot:nth-child(3){background:var(--ls);box-shadow:0 0 10px rgba(210,168,255,.7)}
+  .body{padding:32px 44px 36px}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ls)}
+  h1{font-size:34px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+
+  .tmpl{margin-top:18px;padding:16px 20px;border-radius:12px;background:#0b0e14;border:1px solid var(--line);
+    font-family:var(--mono);font-size:16px;line-height:1.6;color:#cdd6e0}
+  .tmpl .k{color:#c586e0}.tmpl .s{color:#7fd88f}.tmpl .f{color:#82b7ff}
+  .tmpl .slot{background:rgba(210,168,255,.16);border:1px dashed rgba(210,168,255,.5);border-radius:6px;padding:1px 8px;color:#e2ccff;font-weight:700}
+  .tmpl .fixed{color:var(--dim)}
+
+  .rows{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
+    padding:15px 20px;border-radius:13px;border:1px solid var(--line);background:var(--panel)}
+  .row .prov{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15px;min-width:150px}
+  .row .prov .sw{width:12px;height:12px;border-radius:4px}
+  .row .str{font-family:var(--mono);font-size:14.5px;color:#cdd6e0}
+  .row .str b{color:#e2ccff}
+  .row .res{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:14.5px;white-space:nowrap}
+  .row .res .arrow{color:var(--dim)}
+  .row .res .out{color:#5fd6bb;font-weight:700;background:rgba(31,170,139,.12);padding:3px 11px;border-radius:7px}
+
+  .frag{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease}
+  .frag.show{opacity:1;transform:none}
+
+  .punch{margin-top:20px;display:flex;align-items:center;gap:14px;padding:15px 22px;border-radius:12px;
+    border:1px solid rgba(210,168,255,.3);background:rgba(210,168,255,.08)}
+  .punch .tag{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ls);
+    border:1px solid rgba(210,168,255,.4);border-radius:6px;padding:5px 10px;white-space:nowrap}
+  .punch .t{font-size:17px;color:var(--txt)} .punch .t b{color:var(--ls)}
+
+  .hint{position:fixed;right:22px;bottom:15px;font-family:var(--mono);font-size:12px;color:var(--dim);
+    display:flex;align-items:center;gap:8px;transition:opacity .4s}
+  .hint .key{border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 7px}
+  body[data-step="3"] .hint{opacity:0}
+  @keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  .hint .arw{animation:nudge 1.3s ease-in-out infinite}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="win">
+      <div class="bar">
+        <div class="dots"><span class="dot rd"></span><span class="dot yl"></span><span class="dot gr"></span></div>
+        <span class="file">swap_the_engine.py</span>
+        <span class="prog"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></span>
+      </div>
+      <div class="body">
+        <div class="eyebrow">The CTO’s ask, made real · change one string</div>
+        <h1>Swap the vendor in one line</h1>
+
+        <div class="tmpl">
+          model = <span class="f">init_chat_model</span>(<span class="slot">"provider:model"</span>)<span class="fixed"> &nbsp;# only this changes</span><br>
+          model.<span class="f">invoke</span>(<span class="s">"Reply in one word: hello"</span>).<span class="f">text</span><span class="fixed"> &nbsp;# identical everywhere</span>
+        </div>
+
+        <div class="rows">
+          <div class="row">
+            <div class="prov"><span class="sw" style="background:var(--gem)"></span>Gemini</div>
+            <div class="str">"<b>google_genai:gemini-3.1-flash-lite</b>"</div>
+            <div class="res"><span class="arrow">→</span><span class="out">Hello</span></div>
+          </div>
+          <div class="row frag" data-step="1">
+            <div class="prov"><span class="sw" style="background:var(--ant)"></span>Anthropic</div>
+            <div class="str">"<b>anthropic:claude-haiku-4-5</b>"</div>
+            <div class="res"><span class="arrow">→</span><span class="out">Hello</span></div>
+          </div>
+          <div class="row frag" data-step="2">
+            <div class="prov"><span class="sw" style="background:var(--oai)"></span>OpenAI</div>
+            <div class="str">"<b>openai:gpt-5.4-mini</b>"</div>
+            <div class="res"><span class="arrow">→</span><span class="out">Hello</span></div>
+          </div>
+        </div>
+
+        <div class="punch frag" data-step="3">
+          <span class="tag">the point</span>
+          <span class="t">In S2 this was <b>three code paths</b>. Here it’s a <b>list of strings</b> — same <code>.invoke</code>, same <code>.text</code>. Cheaper or better model next month? <b>Change one constant.</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint"><span>press</span><span class="key">→</span><span>to swap the vendor</span><span class="arw">→</span></div>
+
+<script>
+(function(){
+  const frags = [...document.querySelectorAll('.frag')];
+  const maxStep = frags.reduce((m,el)=>Math.max(m, +el.dataset.step), 0);
+  let cur = 0;
+  function apply(){
+    frags.forEach(el=> el.classList.toggle('show', (+el.dataset.step) <= cur));
+    document.body.dataset.step = cur;
+  }
+  function set(startAt){ cur = (startAt==='last') ? maxStep : 0; apply(); }
+  function announce(){ try{ parent.postMessage({type:'hasFragments', count:maxStep}, '*'); }catch(e){} }
+  window.addEventListener('message', e=>{
+    const m=e.data||{};
+    if(m.type==='next'){ if(cur<maxStep){ cur++; apply(); } else parent.postMessage({type:'edge',dir:1},'*'); }
+    else if(m.type==='prev'){ if(cur>0){ cur--; apply(); } else parent.postMessage({type:'edge',dir:-1},'*'); }
+    else if(m.type==='reset'){ set(m.startAt); }
+  });
+  set('first'); announce();
+  window.addEventListener('load', announce);
+})();
+</script>
+</body>
+</html>

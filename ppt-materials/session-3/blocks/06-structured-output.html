@@ -1,0 +1,109 @@
+<!-- @dsCard group="Building Blocks" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One API for structured output</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --ant:#d97757; --lc:#1faa8b; --gem:#4589ff; --warn:#febc2e; --sys:#d2a8ff;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(820px 480px at 0% -10%, rgba(217,119,87,.12), transparent 60%),
+      radial-gradient(820px 480px at 100% 110%, rgba(31,170,139,.1), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1240px;max-width:100%}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ant)}
+  h1{font-size:38px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+  .lead{margin-top:11px;font-size:16px;color:var(--muted);max-width:960px;line-height:1.5}
+  .lead b{color:var(--txt)}
+
+  .cols{margin-top:22px;display:grid;grid-template-columns:1.02fr .98fr;gap:22px;align-items:stretch}
+
+  .flow{display:flex;flex-direction:column;gap:14px}
+  .prose{border:1px solid var(--line);border-radius:13px;padding:15px 18px;background:var(--panel)}
+  .prose .l{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .prose .p{font-size:15px;color:#d3dae2;font-style:italic;line-height:1.5}
+  .arrow{display:flex;align-items:center;gap:12px;justify-content:center}
+  .arrow .code{font-family:var(--mono);font-size:13.5px;color:#e2ccff;background:rgba(210,168,255,.1);
+    border:1px solid rgba(210,168,255,.25);border-radius:9px;padding:9px 14px}
+  .arrow .code b{color:#fff}
+  .form{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+  .form .fh{display:flex;align-items:center;gap:9px;padding:11px 16px;border-bottom:1px solid var(--line);
+    font-weight:700;font-size:13.5px;background:rgba(217,119,87,.06)}
+  .form .fh .ic{color:var(--ant)}
+  .field{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(35,42,53,.6)}
+  .field:last-child{border-bottom:0}
+  .field .fn{font-family:var(--mono);font-size:12.5px;color:var(--muted);min-width:112px}
+  .field .fv{font-family:var(--mono);font-size:13px;font-weight:700}
+  .field .drop{margin-left:auto;font-size:10.5px;font-family:var(--mono);color:var(--dim)}
+  .v-billing{color:#f0a67e}.v-high{color:#ff8a8a}.v-neg{color:#ff9a9a}.v-true{color:#ffd27a}.v-sum{color:#cdd6e0;font-weight:400}
+
+  .side{display:flex;flex-direction:column;gap:16px}
+  .win{background:linear-gradient(180deg,#0f131b,#0b0e14);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .bar{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line)}
+  .dots{display:flex;gap:7px}.d{width:10px;height:10px;border-radius:50%}
+  .rd{background:#ff5f57}.yl{background:#febc2e}.gr{background:#28c840}
+  .fl{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .code2{padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.8;color:#cdd6e0}
+  .code2 .k{color:#c586e0}.code2 .f{color:#82b7ff}.code2 .c{color:var(--dim)}
+  .code2 .hl{background:rgba(31,170,139,.14);border-radius:5px;padding:1px 6px;color:#5fd6bb;font-weight:700}
+  .code2 .one{color:#f0a67e;font-weight:700}
+
+  .catch{border:1px solid rgba(254,188,46,.28);border-radius:13px;padding:14px 17px;background:rgba(254,188,46,.06);
+    font-size:14px;color:#d3dae2;line-height:1.5}
+  .catch b{color:var(--warn)} .catch code{font-family:var(--mono);color:#ffd27a;background:rgba(254,188,46,.1);padding:1px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Building blocks · structured output</div>
+    <h1>One API for structured output</h1>
+    <p class="lead">Our #1 technique from Session 2 — but S2 needed <b>three</b> provider-specific parse calls. LangChain gives us <b>one</b>: <code style="font-family:var(--mono);color:#5fd6bb">with_structured_output()</code>.</p>
+
+    <div class="cols">
+      <div class="flow">
+        <div class="prose">
+          <div class="l">a customer’s message</div>
+          <div class="p">“I’ve been charged twice for May and nobody has replied. This is ridiculous.”</div>
+        </div>
+        <div class="arrow"><span class="code">model.<b>with_structured_output</b>(Triage)</span></div>
+        <div class="form">
+          <div class="fh"><span class="ic">▤</span> Triage — a validated object back</div>
+          <div class="field"><span class="fn">category</span><span class="fv v-billing">"billing"</span><span class="drop">▾ dropdown</span></div>
+          <div class="field"><span class="fn">urgency</span><span class="fv v-high">"high"</span><span class="drop">▾ dropdown</span></div>
+          <div class="field"><span class="fn">sentiment</span><span class="fv v-neg">"negative"</span><span class="drop">▾ dropdown</span></div>
+          <div class="field"><span class="fn">needs_human</span><span class="fv v-true">True</span><span class="drop">✓ escalate</span></div>
+          <div class="field"><span class="fn">summary</span><span class="fv v-sum">"double charge, no reply"</span></div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="win">
+          <div class="bar"><div class="dots"><span class="d rd"></span><span class="d yl"></span><span class="d gr"></span></div><span class="fl">triage.py</span></div>
+          <div class="code2">
+            triage = model.<span class="hl">with_structured_output</span>(Triage)<br>
+            t = triage.<span class="f">invoke</span>(message)<br><br>
+            t.category   <span class="c"># "billing"</span><br>
+            t.needs_human <span class="c"># True  → a real bool</span><br><br>
+            <span class="c"># <span class="one">one</span> method · any provider · validated</span>
+          </div>
+        </div>
+
+        <div class="catch">💡 <b>One catch:</b> this returns the <b>parsed object</b>, not the message — so you lose token counts. Want them back? <code>with_structured_output(Triage, include_raw=True)</code> → keeps the <b>envelope</b> too (<code>out["raw"].usage_metadata</code>).</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

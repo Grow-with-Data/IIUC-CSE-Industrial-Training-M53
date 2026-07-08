@@ -1,0 +1,112 @@
+<!-- @dsCard group="Why LangChain" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why a framework?</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --panel2:#161b22; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --oai:#10a37f; --gem:#4589ff; --ant:#d97757; --lc:#1faa8b; --warn:#febc2e;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(820px 480px at 0% -10%, rgba(69,137,255,.13), transparent 60%),
+      radial-gradient(820px 480px at 100% 110%, rgba(31,170,139,.11), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1240px;max-width:100%}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gem)}
+  h1{font-size:38px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+  h1 .q{color:var(--muted);font-weight:600}
+
+  .pain{margin-top:22px}
+  .paintitle{font-size:15px;color:var(--muted);margin-bottom:12px}
+  .paintitle b{color:var(--txt)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+  .ch{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+  .ch .sw{width:11px;height:11px;border-radius:4px}
+  .code{padding:15px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#c7d0da}
+  .code .k{color:var(--dim)}
+  .hl{border-radius:5px;padding:1px 5px;font-weight:700}
+  .hl.o{background:rgba(16,163,127,.16);color:#4fd6b0}
+  .hl.g{background:rgba(69,137,255,.16);color:#8ab4ff}
+  .hl.a{background:rgba(217,119,87,.18);color:#f0a67e}
+  .diffnote{margin-top:14px;text-align:center;font-size:15px;color:var(--muted)}
+  .diffnote b{color:var(--warn)}
+
+  .trade{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .box{border:1px solid var(--line);border-radius:14px;padding:16px 20px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+  .box h3{font-size:13px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+  .box.gain h3{color:var(--lc)} .box.pay h3{color:var(--warn)}
+  .box ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .box li{font-size:14.5px;color:#d3dae2;display:flex;gap:9px;align-items:flex-start;line-height:1.4}
+  .box li .m{font-family:var(--mono);flex:none}
+  .box.gain li .m{color:var(--lc)} .box.pay li .m{color:var(--warn)}
+
+  .rule{margin-top:20px;display:flex;align-items:center;gap:14px;padding:15px 20px;border-radius:12px;
+    border:1px solid rgba(31,170,139,.3);background:rgba(31,170,139,.08)}
+  .rule .lbl{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--lc);
+    border:1px solid rgba(31,170,139,.4);border-radius:6px;padding:5px 10px;white-space:nowrap}
+  .rule .t{font-size:16px;color:var(--txt)} .rule .t b{color:var(--lc)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">The motivation</div>
+    <h1>Why a framework? <span class="q">Because we keep writing the same thing three times.</span></h1>
+
+    <div class="pain">
+      <div class="paintitle">Session 2 — <b>one job</b> (“send a message, read the reply”), written for <b>three SDKs</b>:</div>
+      <div class="cards">
+        <div class="card">
+          <div class="ch"><span class="sw" style="background:var(--oai)"></span>OpenAI</div>
+          <div class="code"><span class="k">oai.</span><span class="hl o">responses.create</span>(<span class="k">input=…</span>)<br><span class="k">resp.</span><span class="hl o">output_text</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="sw" style="background:var(--gem)"></span>Gemini</div>
+          <div class="code"><span class="k">gem.</span><span class="hl g">models.generate_content</span>(<span class="k">contents=…</span>)<br><span class="k">resp.</span><span class="hl g">text</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="sw" style="background:var(--ant)"></span>Anthropic</div>
+          <div class="code"><span class="k">ant.</span><span class="hl a">messages.create</span>(<span class="k">messages=…</span>)<br><span class="k">resp.</span><span class="hl a">content[0].text</span></div>
+        </div>
+      </div>
+      <div class="diffnote">Different method names · different arguments · <b>three different ways to read one reply</b>. Now multiply that by structured output, tokens, errors…</div>
+    </div>
+
+    <div class="trade">
+      <div class="box gain">
+        <h3>A framework — you gain</h3>
+        <ul>
+          <li><span class="m">+</span> One interface across every provider</li>
+          <li><span class="m">+</span> Reusable blocks: models, messages, tools, memory</li>
+          <li><span class="m">+</span> A straight path to agents, RAG &amp; tracing later</li>
+        </ul>
+      </div>
+      <div class="box pay">
+        <h3>…you pay</h3>
+        <ul>
+          <li><span class="m">–</span> A dependency to install &amp; keep updated</li>
+          <li><span class="m">–</span> A layer of abstraction to learn</li>
+          <li><span class="m">–</span> Occasionally “it did something I didn’t expect”</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rule">
+      <span class="lbl">rule of thumb</span>
+      <span class="t">Use a framework when the shared interface saves you <b>more than the abstraction costs</b>. A one-off script? Raw SDK is fine. An app that grows every week — like ours? It earns its keep.</span>
+    </div>
+  </div>
+</body>
+</html>

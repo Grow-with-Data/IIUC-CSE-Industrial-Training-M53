@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction to LangChain — Session 3 · Presentation</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#08090d; --chrome:#12151c; --line:#232a35; --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans)}
+
+  /* ---------- deck ---------- */
+  .deck{position:fixed;inset:0}
+  .slide{position:absolute;inset:0;display:grid;place-items:center;
+    opacity:0;visibility:hidden;transform:translateY(14px) scale(.995);
+    transition:opacity .35s ease, transform .35s ease, visibility 0s .35s}
+  .slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .4s ease, transform .4s ease;z-index:1}
+  .canvas{width:1320px;height:860px;transform:scale(var(--s,1));transform-origin:center;flex:none}
+  .canvas iframe{width:1320px;height:860px;border:0;display:block;pointer-events:none;background:transparent}
+
+  /* invisible click zones for presenter-style advance */
+  .zone{position:absolute;top:0;bottom:70px;width:28%;z-index:3;cursor:pointer}
+  .zone.left{left:0}.zone.right{right:0;width:72%}
+
+  /* ---------- top progress ---------- */
+  .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#10a37f,#4589ff 55%,#d97757);
+    width:0;z-index:20;transition:width .35s ease}
+
+  /* ---------- bottom chrome ---------- */
+  .chrome{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:20;
+    display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;
+    background:rgba(18,21,28,.82);border:1px solid var(--line);backdrop-filter:blur(10px);
+    box-shadow:0 12px 40px -12px rgba(0,0,0,.7);transition:opacity .3s ease}
+  .chrome.hidden{opacity:0;pointer-events:none}
+  .btn{width:38px;height:38px;border-radius:999px;border:1px solid transparent;background:transparent;
+    color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.15s}
+  .btn:hover{background:rgba(255,255,255,.06);color:var(--txt)}
+  .btn svg{width:19px;height:19px}
+  .count{font-family:var(--mono);font-size:13px;color:var(--txt);padding:0 10px;min-width:70px;text-align:center;
+    display:flex;flex-direction:column;line-height:1.25}
+  .count .sec{font-size:10px;color:var(--dim);letter-spacing:.5px;text-transform:uppercase}
+  .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+
+  /* ---------- title tag (top-left) ---------- */
+  .titletag{position:fixed;top:18px;left:22px;z-index:20;display:flex;align-items:center;gap:11px;
+    font-size:13px;color:var(--muted);transition:opacity .3s ease}
+  .titletag.hidden{opacity:0}
+  .titletag .dot{width:9px;height:9px;border-radius:3px}
+  .titletag b{color:var(--txt);font-weight:600}
+
+  /* ---------- overview (slide sorter) ---------- */
+  .overview{position:fixed;inset:0;z-index:30;background:rgba(8,9,13,.96);backdrop-filter:blur(6px);
+    display:none;flex-direction:column;padding:34px 40px}
+  .overview.open{display:flex}
+  .ovhead{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .ovhead h2{font-size:20px;font-weight:800;letter-spacing:-.3px}
+  .ovhead span{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .ovgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;overflow:auto;padding-right:6px}
+  .thumb{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--chrome);cursor:pointer;
+    transition:.15s;position:relative}
+  .thumb:hover{border-color:#3a4453;transform:translateY(-2px)}
+  .thumb.current{outline:2px solid #4589ff;outline-offset:1px}
+  .thumb .tframe{position:relative;height:172px;overflow:hidden;background:#08090d;border-bottom:1px solid var(--line)}
+  .thumb .tframe iframe{position:absolute;top:0;left:0;width:1320px;height:860px;border:0;
+    transform:scale(.2);transform-origin:top left;pointer-events:none}
+  .thumb .tmeta{display:flex;align-items:center;gap:9px;padding:11px 13px}
+  .thumb .tn{font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .thumb .tt{font-size:13px;font-weight:600}
+  .thumb .bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+
+  /* ---------- help ---------- */
+  .help{position:fixed;right:22px;bottom:22px;z-index:20;font-family:var(--mono);font-size:11.5px;color:var(--dim);
+    display:flex;gap:14px;transition:opacity .3s ease}
+  .help.hidden{opacity:0}
+  .help kbd{font-family:var(--mono);background:rgba(255,255,255,.06);border:1px solid var(--line);
+    border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="deck" id="deck"></div>
+
+  <div class="titletag" id="titletag">
+    <span class="dot" id="tt-dot"></span>
+    <span id="tt-sec"></span> · <b id="tt-title"></b>
+  </div>
+
+  <div class="zone left"  id="zl"></div>
+  <div class="zone right" id="zr"></div>
+
+  <div class="chrome" id="chrome">
+    <button class="btn" id="prev" title="Previous (←)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="count"><span id="c-num">1 / 10</span><span class="sec" id="c-sec">Overview</span></div>
+    <button class="btn" id="next" title="Next (→)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+    <span class="sep"></span>
+    <button class="btn" id="grid" title="Overview (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button class="btn" id="full" title="Fullscreen (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V5a1 1 0 011-1h4M20 9V5a1 1 0 00-1-1h-4M4 15v4a1 1 0 001 1h4M20 15v4a1 1 0 01-1 1h-4"/></svg></button>
+  </div>
+
+  <div class="help" id="help">
+    <span><kbd>←</kbd> <kbd>→</kbd> navigate</span><span><kbd>F</kbd> fullscreen</span><span><kbd>G</kbd> overview</span>
+  </div>
+
+  <div class="overview" id="overview">
+    <div class="ovhead"><h2>Introduction to LangChain — Session 3</h2><span>click a slide to jump · Esc to close</span></div>
+    <div class="ovgrid" id="ovgrid"></div>
+  </div>
+
+<script>
+  const SLIDES = [
+    {src:"overview/00-hero.html",                title:"Session 3 · Introduction to LangChain", sec:"Overview",        color:"#10a37f"},
+    {src:"why/01-why-framework.html",            title:"Why a framework?",                   sec:"Why LangChain",    color:"#4589ff"},
+    {src:"why/02-three-tools.html",              title:"LangChain · LangGraph · LangSmith",  sec:"Why LangChain",    color:"#4589ff"},
+    {src:"interface/03-standard-interface.html", title:"One interface, any model",           sec:"The Interface",    color:"#d2a8ff"},
+    {src:"interface/04-provider-swap.html",      title:"Swap the vendor in one line",        sec:"The Interface",    color:"#d2a8ff"},
+    {src:"blocks/05-messages.html",              title:"Messages: one script, any actor",    sec:"Building Blocks",  color:"#d97757"},
+    {src:"blocks/06-structured-output.html",     title:"One API for structured output",      sec:"Building Blocks",  color:"#d97757"},
+    {src:"agents/07-first-agent.html",           title:"A first agent",                      sec:"Agents",           color:"#febc2e"},
+    {src:"agents/08-memory-streaming.html",      title:"Memory & streaming",                 sec:"Agents",           color:"#febc2e"},
+    {src:"recap/09-recap.html",                  title:"Session 2 → 3, and what's next",     sec:"Recap",            color:"#10a37f"},
+  ];
+
+  const deck = document.getElementById('deck');
+  SLIDES.forEach((s,i)=>{
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    slide.innerHTML = `<div class="canvas"><iframe src="${s.src}" scrolling="no" loading="eager"></iframe></div>`;
+    deck.appendChild(slide);
+  });
+  const slides = [...document.querySelectorAll('.slide')];
+  const frames = slides.map(s=>s.querySelector('iframe'));
+  const aware  = new Array(SLIDES.length).fill(false);  // does slide i have build-steps?
+
+  let cur = 0;
+  const cNum = document.getElementById('c-num');
+  const cSec = document.getElementById('c-sec');
+  const ttSec = document.getElementById('tt-sec');
+  const ttTitle = document.getElementById('tt-title');
+  const ttDot = document.getElementById('tt-dot');
+  const progress = document.getElementById('progress');
+
+  function fitScale(){
+    // letterbox-fit the 1320×860 canvas into the viewport
+    const s = Math.min(window.innerWidth/1320, window.innerHeight/860) * 0.98;
+    document.documentElement.style.setProperty('--s', s.toFixed(4));
+  }
+  function render(){
+    slides.forEach((el,i)=>el.classList.toggle('active', i===cur));
+    const s = SLIDES[cur];
+    cNum.textContent = `${cur+1} / ${SLIDES.length}`;
+    cSec.textContent = s.sec;
+    ttSec.textContent = s.sec;
+    ttTitle.textContent = s.title;
+    ttDot.style.background = s.color;
+    progress.style.width = ((cur+1)/SLIDES.length*100) + '%';
+    document.querySelectorAll('.thumb').forEach((t,i)=>t.classList.toggle('current', i===cur));
+  }
+  function post(i, msg){ const f=frames[i]; if(f&&f.contentWindow) f.contentWindow.postMessage(msg,'*'); }
+  function gotoSlide(i, startAt){
+    if(i<0 || i>SLIDES.length-1) return;
+    cur = i; render();
+    if(aware[cur]) post(cur, {type:'reset', startAt: startAt||'first'});
+  }
+  function go(i){ gotoSlide(i, 'first'); }                       // jump: overview, number keys, Home/End
+  function next(){ if(aware[cur]) post(cur,{type:'next'}); else gotoSlide(cur+1,'first'); }
+  function prev(){ if(aware[cur]) post(cur,{type:'prev'}); else gotoSlide(cur-1,'last'); }
+
+  // animated cards announce themselves and ask the deck to change slide at their first/last build-step
+  window.addEventListener('message', e=>{
+    const m = e.data || {}; if(!m.type) return;
+    const idx = frames.findIndex(f => f && f.contentWindow === e.source);
+    if(m.type==='hasFragments'){ if(idx>=0) aware[idx] = (m.count>0); }
+    else if(m.type==='edge' && idx===cur){ gotoSlide(cur + (m.dir>0?1:-1), m.dir>0?'first':'last'); }
+  });
+
+  document.getElementById('next').onclick = e=>{e.stopPropagation();next();};
+  document.getElementById('prev').onclick = e=>{e.stopPropagation();prev();};
+  document.getElementById('zr').onclick = next;
+  document.getElementById('zl').onclick = prev;
+
+  // fullscreen
+  const full = document.getElementById('full');
+  full.onclick = e=>{ e.stopPropagation();
+    if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.(); }
+    else{ document.exitFullscreen?.(); }
+  };
+
+  // overview / slide sorter
+  const overview = document.getElementById('overview');
+  const ovgrid = document.getElementById('ovgrid');
+  SLIDES.forEach((s,i)=>{
+    const t = document.createElement('div');
+    t.className = 'thumb';
+    t.innerHTML = `<div class="bar" style="background:${s.color}"></div>
+      <div class="tframe"><iframe src="${s.src}" scrolling="no" loading="lazy"></iframe></div>
+      <div class="tmeta"><span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tt">${s.title}</span></div>`;
+    t.onclick = ()=>{ go(i); closeOverview(); };
+    ovgrid.appendChild(t);
+  });
+  function openOverview(){ overview.classList.add('open'); render(); }
+  function closeOverview(){ overview.classList.remove('open'); }
+  function toggleOverview(){ overview.classList.contains('open') ? closeOverview() : openOverview(); }
+  document.getElementById('grid').onclick = e=>{e.stopPropagation();toggleOverview();};
+
+  // keyboard
+  window.addEventListener('keydown', e=>{
+    const k = e.key;
+    if(k==='ArrowRight'||k==='PageDown'||k===' '||k==='l'||k==='n'){ e.preventDefault(); overview.classList.contains('open')?null:next(); }
+    else if(k==='ArrowLeft'||k==='PageUp'||k==='h'||k==='p'){ e.preventDefault(); overview.classList.contains('open')?null:prev(); }
+    else if(k==='Home'){ go(0); }
+    else if(k==='End'){ go(SLIDES.length-1); }
+    else if(k==='f'||k==='F'){ full.click(); }
+    else if(k==='g'||k==='G'||k==='o'||k==='O'){ toggleOverview(); }
+    else if(k==='Escape'){ closeOverview(); }
+    else if(k>='1'&&k<='9'){ go(parseInt(k)-1); }
+    else if(k==='0'){ go(9); }
+  });
+
+  // auto-hide chrome when idle
+  const dock = document.getElementById('chrome');
+  const titletag = document.getElementById('titletag');
+  const help = document.getElementById('help');
+  let idle;
+  function wake(){
+    [dock,titletag,help].forEach(el=>el.classList.remove('hidden'));
+    clearTimeout(idle);
+    idle = setTimeout(()=>{ if(!overview.classList.contains('open'))
+      [dock,titletag,help].forEach(el=>el.classList.add('hidden')); }, 2800);
+  }
+  window.addEventListener('mousemove', wake);
+  window.addEventListener('keydown', wake);
+
+  window.addEventListener('resize', fitScale);
+  fitScale(); render(); wake();
+</script>
+</body>
+</html>

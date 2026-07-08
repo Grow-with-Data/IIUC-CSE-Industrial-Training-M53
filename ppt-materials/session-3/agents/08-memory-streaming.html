@@ -1,0 +1,103 @@
+<!-- @dsCard group="Agents" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory & streaming</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0c10; --panel:#12151c; --line:#232a35;
+    --txt:#e6edf3; --muted:#8b95a3; --dim:#5b6472;
+    --warn:#febc2e; --lc:#1faa8b; --user:#4589ff; --asst:#10a37f; --ant:#d97757;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(820px 480px at 0% -10%, rgba(254,188,46,.1), transparent 60%),
+      radial-gradient(820px 480px at 100% 110%, rgba(31,170,139,.1), transparent 60%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; align-items:center; justify-content:center; padding:44px;
+  }
+  .wrap{width:1240px;max-width:100%}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--warn)}
+  h1{font-size:38px;letter-spacing:-.8px;margin-top:8px;font-weight:800}
+
+  .cols{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+  .panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;background:var(--panel)}
+  .ph{display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .ph .ic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:17px}
+  .ph .tt{font-weight:800;font-size:17px}
+  .ph .sub{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .m .ph .ic{background:rgba(69,137,255,.15)} .s .ph .ic{background:rgba(217,119,87,.15)}
+  .pin{padding:16px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+
+  .code{font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#cdd6e0;background:#0b0e14;
+    border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+  .code .k{color:#c586e0}.code .s{color:#7fd88f}.code .f{color:#82b7ff}.code .c{color:var(--dim)}
+  .code .hl{background:rgba(69,137,255,.16);border-radius:5px;padding:1px 5px;color:#8ab4ff;font-weight:700}
+  .code .hlt{background:rgba(217,119,87,.16);border-radius:5px;padding:1px 5px;color:#f0a67e;font-weight:700}
+
+  .chat{display:flex;flex-direction:column;gap:8px}
+  .bub{max-width:88%;padding:9px 13px;border-radius:12px;font-size:13.5px;line-height:1.4}
+  .bub.u{align-self:flex-end;background:rgba(69,137,255,.14);border:1px solid rgba(69,137,255,.28);color:#dbe7ff}
+  .bub.a{align-self:flex-start;background:rgba(16,163,127,.12);border:1px solid rgba(16,163,127,.25);color:#c8f0e0}
+  .bub .who{display:block;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:2px}
+  .remember{align-self:center;font-size:12px;color:var(--warn);font-family:var(--mono)}
+
+  .stream{background:#0b0e14;border:1px solid var(--line);border-radius:11px;padding:15px 16px;font-size:14px;color:#dfe7ee;line-height:1.55;min-height:96px}
+  .stream .typed{color:#c8f0e0}
+  .cursor{display:inline-block;width:9px;height:17px;background:var(--lc);vertical-align:-3px;margin-left:2px;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  .analogy{border:1px solid var(--line);border-radius:11px;padding:12px 15px;font-size:13.5px;color:#d3dae2;line-height:1.5;margin-top:auto}
+  .m .analogy{border-color:rgba(69,137,255,.26);background:rgba(69,137,255,.06)}
+  .s .analogy{border-color:rgba(31,170,139,.26);background:rgba(31,170,139,.06)}
+  .analogy b{color:var(--txt)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Agents · make it feel real</div>
+    <h1>Memory &amp; streaming</h1>
+
+    <div class="cols">
+      <!-- MEMORY -->
+      <div class="panel m">
+        <div class="ph"><span class="ic">🎟️</span><span class="tt">Memory</span><span class="sub">give it a thread_id</span></div>
+        <div class="pin">
+          <div class="code">
+<span class="k">from</span> langgraph.checkpoint.memory <span class="k">import</span> InMemorySaver<br>
+agent = create_agent(model, tools=[], <span class="hl">checkpointer=InMemorySaver()</span>)<br>
+cfg = {<span class="s">"configurable"</span>: {<span class="hl">"thread_id"</span>: <span class="s">"customer-42"</span>}}
+          </div>
+          <div class="chat">
+            <div class="bub u"><span class="who">turn 1 · human</span>Hi, my name is Priya.</div>
+            <div class="bub a"><span class="who">ai</span>Nice to meet you, Priya! How can I help?</div>
+            <div class="bub u"><span class="who">turn 2 · human</span>What’s my name?</div>
+            <div class="bub a"><span class="who">ai</span>Your name is Priya! 🎯</div>
+          </div>
+          <div class="analogy">💡 The <b>thread_id is a support-ticket number.</b> Reopen ticket #42 → the whole thread is there. A new id → a stranger with no history.</div>
+        </div>
+      </div>
+
+      <!-- STREAMING -->
+      <div class="panel s">
+        <div class="ph"><span class="ic">⌨️</span><span class="tt">Streaming</span><span class="sub">reply as it types</span></div>
+        <div class="pin">
+          <div class="code">
+<span class="k">for</span> chunk <span class="k">in</span> model.<span class="hlt">stream</span>(<span class="s">"Write a short apology…"</span>):<br>
+&nbsp;&nbsp;<span class="f">print</span>(chunk.<span class="hlt">text</span>, end=<span class="s">""</span>)
+          </div>
+          <div class="stream"><span class="typed">I’m so sorry about the double charge — I know how frustrating that is. I’ve flagged it to our billing team, who</span><span class="cursor"></span></div>
+          <div class="analogy">💡 Watching the reply <b>typed live</b> vs. waiting for the sealed letter. Same words — a far better wait. This is what makes a chat UI feel alive (Session 7).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
